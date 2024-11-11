@@ -1,85 +1,78 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-public class Konto {
-    private String kontonummer;
-    private Double Kontostand;
-    private String habenzins;
+public abstract class Konto {
+     private String ktoNummer;
+   public static double kontostand;
+    public static double habenzins;
     private Kunde myKunde;
-    private Bank bank;
-    private ArrayList<Kontobewegung> myBew = new ArrayList<>();
+    List<Kontobewegung> myBew = new ArrayList<>();
+    public List<Kontobewegung> kontobewegungList = new ArrayList<>();
 
-    public Konto(String kontonummer, Double kontostand, String habenzins, Kunde myKunde, ArrayList<Kontobewegung> myBew, Bank bank) {
-        this.kontonummer = kontonummer;
-        this.Kontostand = kontostand;
+
+    public Konto(String ktoNummer, double habenzins, Kunde myKunde,  double kontostand,LocalDate date){
+        this.ktoNummer = ktoNummer;
         this.habenzins = habenzins;
         this.myKunde = myKunde;
-        this.myBew = myBew;
-        this.bank = bank;
+        this.kontostand = kontostand;
+        myKunde.addKunde(this);
+        Bank.myKonten.add(this);
     }
 
-    public void einzahlen(double betrag) {
-        this.Kontostand += betrag;
-        myBew.add(new Kontobewegung(betrag, LocalDateTime.now(), this));
-        System.out.println("Einzahlung von " + betrag + " auf das Konto " + this.kontonummer + " erfolgreich.");
+    public void einzahlen(double betrag, LocalDate datum) {
+        zinssummeBerechnen(datum);
+        kontostand +=betrag;
+        myBew.add(new Kontobewegung(betrag,datum,this,"Einzahlen"));
     }
 
-    public void eröffnen(String kundenName, String adresse, String kontonummer, double startEinzahlung, String habenzins, String kundennummer) {
-        ArrayList<Kunde> kundenListe = bank.getMyKunden();
 
-        Kunde vorhandenerKunde = null;
-        for (Kunde kunde : kundenListe) {
-            if (kunde.getName().equals(kundenName)) {
-                vorhandenerKunde = kunde;
-                break;
-            }
-        }
-
-        if (vorhandenerKunde == null) {
-            ArrayList<Konto> kontenListe = new ArrayList<>();
-            vorhandenerKunde = new Kunde(kundennummer, kundenName, adresse, LocalDateTime.now(), kontenListe);
-            kundenListe.add(vorhandenerKunde);
-            System.out.println("Neuer kunde hinzugefügt: " + kundenName);
-        }
-
-        ArrayList<Kontobewegung> kontobewegungen = new ArrayList<>();
-        Konto neuesKonto = new Konto(kontonummer, 0.0, habenzins, vorhandenerKunde, kontobewegungen, bank);
-        neuesKonto.einzahlen(startEinzahlung);
-        vorhandenerKunde.getMyKonten().add(neuesKonto);
-        bank.getMyKonten().add(neuesKonto);
-        System.out.println("Neues Konto hinzugefügt:  Vom User:" + kundenName);
-
+    public String getKtoNummer() {
+        return ktoNummer;
     }
 
-    public String getKontonummer() {
-        return kontonummer;
+    public void setKtoNummer(String ktoNummer) {
+        this.ktoNummer = ktoNummer;
     }
 
-    public Double getKontostand() {
-        return Kontostand;
+    public double getKontostand() {
+        return kontostand;
     }
 
-    public String getHabenzins() {
+    public List<Kontobewegung> getKontobewegungList() {
+        return kontobewegungList;
+    }
+
+    public void setKontostand(double kontostand) {
+        this.kontostand = kontostand;
+    }
+
+    public double getHabenzins() {
         return habenzins;
+    }
+
+    public void setHabenzins(double habenzins) {
+        this.habenzins = habenzins;
     }
 
     public Kunde getMyKunde() {
         return myKunde;
     }
 
-    public ArrayList<Kontobewegung> getMyBew() {
+    public void setMyKunde(Kunde myKunde) {
+        this.myKunde = myKunde;
+    }
+
+    public List<Kontobewegung> getMyBew() {
         return myBew;
     }
 
-    public Bank getBank() {
-        return bank;
+    public void setMyBew(List<Kontobewegung> myBew) {
+        this.myBew = myBew;
     }
 
-    public void setBank(Bank bank) {
-        this.bank = bank;
-    }
+
+    public abstract void zinssummeBerechnen(LocalDate date);
+    public abstract void abheben(double betrag, LocalDate date);
+    public abstract void berechneZinsen(LocalDate date);
 }

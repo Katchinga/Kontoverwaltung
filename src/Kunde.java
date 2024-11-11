@@ -1,19 +1,34 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Kunde {
+    private String  kundenNummer;
     private String name;
     private String adresse;
-    private LocalDateTime kundeSeit;
-    private ArrayList<Konto> myKonten;
-    String Kundennummer;
+    private LocalDate kundeSeit;
+    public static ArrayList<Konto> myKonten = new ArrayList<>();
 
-    public Kunde(String kundennummer, String name, String adresse, LocalDateTime kundeSeit, ArrayList<Konto> myKonten) {
+    public Kunde(String kundenNummer, String name, String adresse, LocalDate kundeSeit, String kontoNr,double kontostand, double habenzins, double sollzins, double dispo, char art) {
+        this.kundenNummer = kundenNummer;
         this.name = name;
         this.adresse = adresse;
         this.kundeSeit = kundeSeit;
-        this.myKonten = myKonten;
-        this.Kundennummer = kundennummer;
+        if(art== ' '){
+            Bank.eröffneGirokonto(kontoNr, kontostand,habenzins,this,sollzins,dispo,kundeSeit);
+        }else {
+            Bank.eröffneSparkonto(kontoNr,kontostand,sollzins,this,kundeSeit,art);
+        }
+        Bank.myKunden.add(this);
+
+    }
+
+    public void addKunde(Konto konto){
+        myKonten.add(konto);
+    }
+
+    public String getKundenNummer() {
+        return kundenNummer;
     }
 
     public String getName() {
@@ -24,15 +39,11 @@ public class Kunde {
         return adresse;
     }
 
-    public LocalDateTime getKundeSeit() {
+    public LocalDate getKundeSeit() {
         return kundeSeit;
     }
 
     public ArrayList<Konto> getMyKonten() {
         return myKonten;
-    }
-
-    public String getKundennummer() {
-        return Kundennummer;
     }
 }

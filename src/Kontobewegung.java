@@ -1,33 +1,29 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Kontobewegung {
-    private Double betrag;
-    private LocalDateTime datum;
-    private Konto myKonto;
 
-    public Kontobewegung(Double betrag, LocalDateTime datum, Konto myKonto) {
+    private double betrag;
+    private  LocalDate datum;
+    private Konto myKonto;
+    String buchungstext;
+    private String text;
+    public Kontobewegung(double betrag, LocalDate datum, Konto myKonto,String buchungstext) {
         this.betrag = betrag;
         this.datum = datum;
         this.myKonto = myKonto;
+        this.buchungstext= buchungstext;
     }
 
-    public Double getBetrag() {
+    public String getText() {
+        return text;
+    }
+
+    public double getBetrag() {
         return betrag;
     }
 
-    public LocalDateTime getDatum() {
+    public LocalDate getDatum() {
         return datum;
-    }
-
-    public Konto getMyKonto() {
-        return myKonto;
-    }
-
-    public void setBetrag(Double betrag) {
-        this.betrag = betrag;
-    }
-
-    public void setDatum(LocalDateTime datum) {
-        this.datum = datum;
     }
 }
